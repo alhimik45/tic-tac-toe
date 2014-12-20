@@ -1,0 +1,25 @@
+(page "index.html"
+  (:require
+    [tic-tac-toe.rpc :as rpc]
+    [tailrecursion.hoplon.reload :refer [reload-all]]))
+
+(html
+ (head)
+ (body
+  (p "Tic-tac-toe online game for two players")
+  (button
+  ; :toggle (cell= (nil? rpc/match-id))
+   :on-click (fn [_] (rpc/new-game 25 25))
+   "New game")
+  (div
+   :toggle rpc/match-id
+   (p "Share link to new game:")
+   (let [url-cell (cell= (str (.-protocol js/location) "//"
+                              (.-host js/location) "/connect.html#/"
+                              rpc/match-id))]
+     (div
+      (a :href url-cell
+         "Link")
+      (p "Copy it:")
+      (input :value url-cell)))
+   (p "First 2 users will be play, others will view"))))

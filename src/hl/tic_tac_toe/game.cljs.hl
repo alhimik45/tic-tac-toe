@@ -1,0 +1,73 @@
+(page "game.html"
+      (:require
+       [cljs.core.match]
+       [tic-tac-toe.rpc :as rpc]
+       [tic-tac-toe.page :as page])
+      (:require-macros [cljs.core.match.macros :refer [match]]))
+
+(def game-id-atom (atom nil))
+(def player-id-atom (atom nil))
+
+(defn init-game [game-id player-id]
+  (reset! game-id-atom game-id)
+  (reset! player-id-atom player-id)
+  (rpc/game-loop game-id player-id))
+
+(match
+ [page/params]
+ [[game-id "player" player-id]] (init-game game-id player-id)
+ :else (page/redirect! ""))
+
+(defn cell-class [me]
+  (case me
+    :x "cell-x"
+    :0 "cell-0"))
+
+(defn cell-class-selected [side]
+  (case side
+    :x "cell-x-selected"
+    :0 "cell-0-selected"))
+
+(defn cell-id [i j]
+  (str "cell-" i "-" j))
+
+(defc= win (:win rpc/state))
+(defc= winner (when win (name win)))
+
+(defn move [i j]
+  (when-not @win
+    (rpc/move @game-id-atom @player-id-atom [i j])))
+
+(defn make-game-board [width height me]
+  (table
+   (map-indexed (fn [i _]
+                  (tr
+                   (map-indexed (fn [j _]
+                                  (td :class (cell-class me)
+                                      :on-click #(move i j)
+                                      :id (cell-id i j)))
+                                (repeat width nil))))
+                (repeat height nil))))
+
+(defc= me (:num rpc/first-state))
+(defc= board-width (when-let [position (:position rpc/first-state)] (count (position 0))))
+(defc= board-height (when-let [position (:position rpc/first-state)] (count position)))
+
+(defc= update-board (doseq [i (range board-height)
+                            j (range board-width)
+                            :let [el (get-in (:position rpc/state) [i j])]]
+                      (when el
+                        (set! (.-className (by-id (cell-id i j))) (cell-class-selected el)))))
+
+(defc= initialization (when-let [position (:position rpc/first-state)]
+                        (append-child (by-id "game-board")
+                                      (make-game-board board-width board-height me))))
+
+
+
+(html
+ (head)
+ (body
+  (h2 :toggle win
+     (text "~{winner} win!"))
+  (div :id "game-board")))

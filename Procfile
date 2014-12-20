@@ -1,0 +1,1 @@
+web: java $JVM_OPTS -cp target/tic-tac-toe-standalone.jar clojure.main -m tic-tac-toe.core $PORT

@@ -1,0 +1,53 @@
+table {
+  border-collapse: collapse;
+}
+
+.cell-x{
+  width:20px;
+  height:20px;
+  border:1px solid #aaa;
+}
+
+.cell-0{
+  width:20px;
+  height:20px;
+  border:1px solid #aaa;
+}
+
+.cell-x-selected {
+  width:20px;
+  height:20px;
+  border:1px solid #aaa;
+  background: url(img/x.svg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.cell-x:hover{
+  background: url(img/x.svg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.cell-0-selected {
+  width:20px;
+  height:20px;
+  border:1px solid #aaa;
+  background: url(img/0.svg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.cell-0:hover{
+  background: url(img/0.svg);
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
